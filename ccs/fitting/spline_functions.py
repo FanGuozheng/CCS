@@ -263,9 +263,16 @@ def get_expcoeffs(aa, bb, cc, r0):
     '''
 
     alpha = -cc / bb
-    beta = alpha * r0 + np.log(cc / alpha ** 2)
+    print('alpha0', alpha)
+    _cc = cc
+    while alpha * aa < 5E-2 or alpha < 3.0E0:
+        _cc *= 1.1
+        alpha = -_cc / bb
+    print('alpha', alpha)
+    beta = alpha * r0 + np.log(_cc / alpha ** 2)
+    # beta = alpha * r0 + np.log(cc / alpha ** 2)
     gamma = aa - np.exp(-alpha * r0 + beta)
-
+    print('alpha, beta, gamma', alpha, beta, gamma)
     return alpha, beta, gamma
 
 

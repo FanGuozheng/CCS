@@ -21,10 +21,11 @@ setup(
     license='GPLv3',
     install_requires=[
         'cvxopt==1.2.4',
-        'numpy>=1.18.1',
-        'pandas==0.24.2',
-        'scipy',
-        'ase>=3.19.0'],
+        #'numpy>=1.18.1',
+        #'pandas==0.24.2',
+        #'scipy',
+        #'ase>=3.19.0'
+        ],
     classifiers=[
         'Programming Language :: Python',
         'Environment :: Console',

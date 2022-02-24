@@ -94,7 +94,8 @@ def twp_fit(filename):
                     raise
                 if gen_params['interface'] == 'DFTB':
                     try:
-                        dftb_energies.append(vv['energy_dftb']['Elec'])
+                        # dftb_energies.append(vv['energy_dftb']['Elec'])
+                        dftb_energies.append(vv['energy_dftb']['Tene'])
                     except KeyError:
                         logger.debug('Structure with no key Elec at %s', snum)
                         raise
@@ -109,10 +110,13 @@ def twp_fit(filename):
                 assert len(ref_energies) == len(dftb_energies)
                 columns = ['DFT(eV)', 'DFTB(eV)', 'delta(Hartree)']
                 energies = np.vstack(
-                    (np.asarray(ref_energies), np.asarray(dftb_energies))
+                    (np.asarray(ref_energies) + 0.247057651642955E+07, np.asarray(dftb_energies) + 15699.7778)
                 )
                 # convert energies from eV to Hartree
+                # print('DFT energies', energies[0])
+                # print('DFTB energies', energies[1])
                 ref_energies = (energies[0] - energies[1]) * eV__Hartree
+                print('ref_energies', ref_energies)
                 write_as_nxy(
                     'Train_energy.dat',
                     'The input energies',
@@ -121,7 +125,7 @@ def twp_fit(filename):
                 )
 
         logger.info('\nThe minimum distance for atom pair %s is %s '
-                    %(atmpair, min(list_dist)))
+                    % (atmpair, min(list_dist)))
         dist_mat = pd.DataFrame(list_dist)
         dist_mat = dist_mat.fillna(0)
         dist_mat.to_csv(atmpair + '.dat', sep=' ', index=False)

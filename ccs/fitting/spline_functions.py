@@ -180,9 +180,12 @@ def spline_energy_model(rcut, rmin, df, cols, dx, size, xx):
     logger.debug("\n A matrix is: \n %s \n Spline interval = %s", aa, xx)
     vv = np.zeros((size, cols))
     indices = []
+    print('size', size, 'cols', cols, 'dx', dx)
     for config in range(size):
+        print('distances 0', len(df[config]))
         distances = [ii for ii in df[config, :] if rmin <= ii <= rcut]
         uu = 0
+        print('distances 1', len(distances))
         for rr in distances:
             index = int(np.ceil(np.around(((rr - rmin) / dx), decimals=5)))
             indices.append(index)

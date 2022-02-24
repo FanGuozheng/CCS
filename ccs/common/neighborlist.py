@@ -37,7 +37,6 @@ def pair_dist(atoms, rcut, ch1, ch2):
         bothways = False
     else:
         bothways = True
-
     nl = NeighborList(atoms.get_global_number_of_atoms() * [rcut],
                       self_interaction=False, bothways=bothways)
     nl.update(atoms)

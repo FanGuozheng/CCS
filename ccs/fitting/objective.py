@@ -25,7 +25,6 @@ logger = logging.getLogger(__name__)
 class Objective:
     '''Objective function for the ccs method.'''
 
-
     def __init__(self, l_twb, sto, energy_ref, gen_params, ewald=[]):
         '''Generates Objective class object.
 
@@ -59,7 +58,6 @@ class Objective:
 
         logger.debug('The reference energy : \n %s \n Number of pairs:%s',
                      self.energy_ref, self.np)
-
 
     @staticmethod
     def solver(pp, qq, gg, hh, aa, bb, maxiter=300, tol=(1e-10, 1e-10, 1e-10)):
@@ -97,7 +95,6 @@ class Objective:
 
         return sol
 
-
     def eval_obj(self, xx):
         '''Mean squared error function.
 
@@ -112,9 +109,8 @@ class Objective:
         '''
 
         return np.format_float_scientific(
-            np.sum((self.energy_ref - (np.ravel(self.mm.dot(xx))))**2) \
+            np.sum((self.energy_ref - (np.ravel(self.mm.dot(xx))))**2)
             / self.ns, precision=4)
-
 
     def plot(self, name, model_energies, s_interval, dismat, s_a, xx):
         ''' Plots the results.
@@ -132,7 +128,7 @@ class Objective:
 
         ax1 = fig.add_subplot(2, 2, 1)
         ax1.plot(model_energies, self.energy_ref, 'bo')
-        ax1.set_xlabel('Predicted energies')
+        # ax1.set_xlabel('Predicted energies')
         ax1.set_ylabel('Ref. energies')
         zz = np.polyfit(model_energies, self.energy_ref, 1)
         pp = np.poly1d(zz)
@@ -156,7 +152,6 @@ class Objective:
         plt.tight_layout()
         plt.savefig(name + '-summary.png')
 
-
     def get_coeffs(self, xx, model_energies):
         '''Plots the results.
 
@@ -170,7 +165,7 @@ class Objective:
         ind = 0
 
         for ii in range(self.np):
-            curvatures = xx[ind : ind + self.cparams[ii]]
+            curvatures = xx[ind: ind + self.cparams[ii]]
             ind = self.cparams[ii]
             s_a = np.dot(self.l_twb[ii].aa, curvatures)
             s_b = np.dot(self.l_twb[ii].bb, curvatures)
@@ -210,7 +205,6 @@ class Objective:
                 s_a,
                 s_c)
 
-
     def list_iterator(self):
         '''Iterates over the self.np attribute.'''
 
@@ -226,7 +220,6 @@ class Objective:
         n_list = list(itertools.product(*tmp))
 
         return n_list
-
 
     def solution(self):
         '''Function to solve the objective with constraints.'''
@@ -273,7 +266,6 @@ class Objective:
 
         return model_energies, mse
 
-
     def get_m(self):
         '''Returns the M matrix.
 
@@ -288,7 +280,10 @@ class Objective:
             tmp.append(self.l_twb[ii].vv)
             logger.debug('\n The %d pair v matrix is :\n %s', ii,
                          self.l_twb[ii].vv)
+            print('self.l_twb[ii].vv', ii, self.l_twb[ii].vv.sum(-1))
         vv = np.hstack([*tmp])
+        print('tmp', [ii.shape for ii in tmp], vv.shape)
+        print('self.sto', self.sto)
         logger.debug('\n The v  matrix shape after stacking :\t %s', vv.shape)
         mm = np.hstack((vv, self.sto))
 
@@ -296,7 +291,6 @@ class Objective:
             mm = np.hstack((mm, self.ewald))
 
         return mm
-
 
     def get_g(self, n_switch):
         '''Returns constraints matrix.
@@ -336,7 +330,7 @@ class Objective:
             for elem in range(self.np):
                 n_gaps = (
                     n_gaps + self.l_twb[elem].cols - 2 - sum(
-                        self.l_twb[elem].mask[1 : self.l_twb[elem].cols - 1]))
+                        self.l_twb[elem].mask[1: self.l_twb[elem].cols - 1]))
                 wid = wid + self.l_twb[elem].cols
             if self.interface == 'CCS+Q':
                 wid = wid + 1
